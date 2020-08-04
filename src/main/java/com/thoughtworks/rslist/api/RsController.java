@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class RsController {
@@ -52,5 +53,14 @@ public class RsController {
     @GetMapping("/rs/listall")
     public String GetRsEventList() {
         return rsEventList.toString();
+    }
+
+    @DeleteMapping("/rs")
+    public boolean deleteRsEvent(@RequestBody RsEvent rsEvent) {
+        if (rsEvent == null) {
+            return false;
+        }
+        rsEventList = rsEventList.stream().filter(o -> !o.getName().equals(rsEvent.getName())).collect(Collectors.toList());
+        return true;
     }
 }

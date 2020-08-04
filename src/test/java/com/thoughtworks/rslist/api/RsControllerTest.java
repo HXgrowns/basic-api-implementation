@@ -79,6 +79,24 @@ public class RsControllerTest {
                         "}]"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void shouldDeleteRsEvent() throws Exception {
+        mockMvc.perform(delete("/rs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"第三条事件\",\"keyword\":\"third\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+        mockMvc.perform(get("/rs/listall"))
+                .andExpect(content().string("[{\n" +
+                        "\"name\": \"第一条事件\",\n" +
+                        "\"keyword\": \"one\"\n" +
+                        "}, {\n" +
+                        "\"name\": \"第二条事件\",\n" +
+                        "\"keyword\": \"two\"\n" +
+                        "}]"))
+                .andExpect(status().isOk());
+    }
 }
 
 
