@@ -8,9 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,6 +55,28 @@ public class RsControllerTest {
         mockMvc.perform(post("/rs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"第四事件\",\"keyword\":\"forth\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+    }
+
+    @Test
+    void shouldUpdateRsEvent() throws Exception {
+        mockMvc.perform(put("/rs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"第三条事件\",\"keyword\":\"third\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+        mockMvc.perform(get("/rs/listall"))
+                .andExpect(content().string("[{\n" +
+                        "\"name\": \"第一条事件\",\n" +
+                        "\"keyword\": \"one\"\n" +
+                        "}, {\n" +
+                        "\"name\": \"第二条事件\",\n" +
+                        "\"keyword\": \"two\"\n" +
+                        "}, {\n" +
+                        "\"name\": \"第三条事件\",\n" +
+                        "\"keyword\": \"third\"\n" +
+                        "}]"))
                 .andExpect(status().isOk());
     }
 }

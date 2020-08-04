@@ -27,4 +27,12 @@ public class RsEvent {
     public void setKeyword(String keyword) {
         this.keyword = keyword;
     }
+
+    @Override
+    public String toString() {
+        return String.format("{\n" +
+                "\"name\": \"%s\",\n" +
+                "\"keyword\": \"%s\"\n" +
+                "}", this.name, this.keyword);
+    }
 }

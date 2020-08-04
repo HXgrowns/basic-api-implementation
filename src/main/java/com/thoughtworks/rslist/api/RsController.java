@@ -19,7 +19,7 @@ public class RsController {
         return rsList.get(index - 1);
     }
 
-    @GetMapping("/rs/list")
+    @GetMapping(value = "/rs/list")
     public String GetRsEventListByGivenRange(@RequestParam(required = false, defaultValue = "1") Integer start, @RequestParam(required = false) Integer end) {
         if (end == null) {
             end = rsList.size();
@@ -28,10 +28,29 @@ public class RsController {
     }
 
     @PostMapping("/rs")
-    public void addRsEvent(@RequestBody RsEvent rsEvent) {
+    public boolean addRsEvent(@RequestBody RsEvent rsEvent) {
         if (rsEvent == null) {
-            return;
+            return false;
         }
         rsEventList.add(rsEvent);
+        return true;
+    }
+
+    @PutMapping(value = "/rs")
+    public boolean updateRsEvent(@RequestBody RsEvent rsEvent) {
+        if (rsEvent == null) {
+            return false;
+        }
+        rsEventList.forEach(o -> {
+            if (o.getName().equals(rsEvent.getName())) {
+                o.setKeyword(rsEvent.getKeyword());
+            }
+        });
+        return true;
+    }
+
+    @GetMapping("/rs/listall")
+    public String GetRsEventList() {
+        return rsEventList.toString();
     }
 }
