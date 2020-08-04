@@ -1,12 +1,13 @@
 package com.thoughtworks.rslist.api;
 
-import org.junit.jupiter.api.MethodDescriptor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.nio.charset.StandardCharsets;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -66,17 +67,8 @@ public class RsControllerTest {
                 .content("{\"name\":\"第三条事件\",\"keyword\":\"third\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
-        mockMvc.perform(get("/rs/listall"))
-                .andExpect(content().string("[{\n" +
-                        "\"name\": \"第一条事件\",\n" +
-                        "\"keyword\": \"one\"\n" +
-                        "}, {\n" +
-                        "\"name\": \"第二条事件\",\n" +
-                        "\"keyword\": \"two\"\n" +
-                        "}, {\n" +
-                        "\"name\": \"第三条事件\",\n" +
-                        "\"keyword\": \"third\"\n" +
-                        "}]"))
+        mockMvc.perform(get("/rs/listall").accept("application/json;charset=UTF-8"))
+                .andExpect(content().string("[{\"name\":\"第一条事件\",\"keyword\":\"one\"},{\"name\":\"第二条事件\",\"keyword\":\"two\"},{\"name\":\"第三条事件\",\"keyword\":\"third\"}]"))
                 .andExpect(status().isOk());
     }
 
@@ -87,14 +79,8 @@ public class RsControllerTest {
                 .content("{\"name\":\"第三条事件\",\"keyword\":\"third\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
-        mockMvc.perform(get("/rs/listall"))
-                .andExpect(content().string("[{\n" +
-                        "\"name\": \"第一条事件\",\n" +
-                        "\"keyword\": \"one\"\n" +
-                        "}, {\n" +
-                        "\"name\": \"第二条事件\",\n" +
-                        "\"keyword\": \"two\"\n" +
-                        "}]"))
+        mockMvc.perform(get("/rs/listall").accept("application/json;charset=UTF-8"))
+                .andExpect(content().string("[{\"name\":\"第一条事件\",\"keyword\":\"one\"},{\"name\":\"第二条事件\",\"keyword\":\"two\"}]"))
                 .andExpect(status().isOk());
     }
 }

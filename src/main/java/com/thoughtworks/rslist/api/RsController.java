@@ -51,8 +51,8 @@ public class RsController {
     }
 
     @GetMapping("/rs/listall")
-    public String GetRsEventList() {
-        return rsEventList.toString();
+    public List<RsEvent> GetRsEventList() {
+        return rsEventList;
     }
 
     @DeleteMapping("/rs")
