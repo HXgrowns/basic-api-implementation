@@ -6,48 +6,47 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/rs")
 public class RsController {
-    private List<String> rsList = Arrays.asList("第一条事件", "第二条事件", "第三条事件");
-    private List<RsEvent> rsEventList = new ArrayList<>(Arrays.asList(new RsEvent("第一条事件", "one"),
-            new RsEvent("第二条事件", "two"),
-            new RsEvent("第三条事件", "three")));
+    private List<RsEvent> rsEventList;
 
-    @GetMapping("/rs")
-    public String getRsEventById(@RequestParam int index) {
-        return rsList.get(index - 1);
+    public RsController() {
+        this.rsEventList = new ArrayList<>(Arrays.asList(new RsEvent("第一条事件", "one"),
+                new RsEvent("第二条事件", "two"),
+                new RsEvent("第三条事件", "three")));
     }
 
-    @GetMapping(value = "/rs/list")
-    public String GetRsEventListByGivenRange(@RequestParam(required = false, defaultValue = "1") Integer start, @RequestParam(required = false) Integer end) {
+    @GetMapping("/{index}")
+    public RsEvent getRsEventById(@PathVariable int index) {
+        return rsEventList.get(index);
+    }
+
+    @GetMapping(value = "/list")
+    public List<RsEvent> GetRsEventListByGivenRange(@RequestParam(required = false, defaultValue = "0") Integer start, @RequestParam(required = false) Integer end) {
         if (end == null) {
-            end = rsList.size();
+            end = rsEventList.size();
         }
-        return rsList.subList(start - 1, end).toString();
+        return rsEventList.subList(start, end);
     }
 
-    @PostMapping("/rs")
-    public boolean addRsEvent(@RequestBody RsEvent rsEvent) {
+    @PostMapping
+    public void addRsEvent(@RequestBody RsEvent rsEvent) {
         if (rsEvent == null) {
-            return false;
+            return;
         }
         rsEventList.add(rsEvent);
-        return true;
     }
 
-    @PutMapping(value = "/rs")
-    public boolean updateRsEvent(@RequestBody RsEvent rsEvent) {
-        if (rsEvent == null) {
-            return false;
+    @PutMapping(value = "/{index}")
+    public void updateRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
+        RsEvent selectedRsEvent = rsEventList.get(index);
+        if (selectedRsEvent == null) {
+            return;
         }
-        rsEventList.forEach(o -> {
-            if (o.getName().equals(rsEvent.getName())) {
-                o.setKeyword(rsEvent.getKeyword());
-            }
-        });
-        return true;
+        selectedRsEvent.setKeyword(rsEvent.getKeyword());
+        selectedRsEvent.setName(rsEvent.getName());
     }
 
     @GetMapping("/rs/listall")
@@ -55,12 +54,12 @@ public class RsController {
         return rsEventList;
     }
 
-    @DeleteMapping("/rs")
-    public boolean deleteRsEvent(@RequestBody RsEvent rsEvent) {
-        if (rsEvent == null) {
-            return false;
+    @DeleteMapping("/{index}")
+    public void deleteRsEvent(@PathVariable int index) {
+        RsEvent selectedRsEvent = rsEventList.get(index);
+        if (selectedRsEvent == null) {
+            return;
         }
-        rsEventList = rsEventList.stream().filter(o -> !o.getName().equals(rsEvent.getName())).collect(Collectors.toList());
-        return true;
+        rsEventList.remove(index);
     }
 }
