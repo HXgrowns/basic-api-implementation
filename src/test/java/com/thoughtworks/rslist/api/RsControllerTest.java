@@ -69,18 +69,6 @@ public class RsControllerTest {
     }
 
     @Test
-    void shouldAddRsEvent() throws Exception {
-        RsEvent rsEvent = new RsEvent("第四事件", "four");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String rsEventString = objectMapper.writeValueAsString(rsEvent);
-
-        mockMvc.perform(post("/rs")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(rsEventString))
-                .andExpect(status().isOk());
-    }
-
-    @Test
     void shouldUpdateRsEvent() throws Exception {
         RsEvent rsEvent = new RsEvent("第一条事件", "one and one");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -226,6 +214,46 @@ public class RsControllerTest {
         shouldAddUserRsEvent(rsEvent);
     }
 
+    @Test
+    void shouldFailWhenExist() throws Exception {
+        RsEvent rsEvent1 = new RsEvent("添加一条热搜", "娱乐", new User(
+                "huxiao",
+                19,
+                "male",
+                "a111@thoughtworks.com",
+                "18888888888"));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String rsEventString1 = objectMapper.writeValueAsString(rsEvent1);
+
+        mockMvc.perform(post("/rs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(rsEventString1))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/rs/3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user.email", is("a@thoughtworks.com")));
+
+        RsEvent rsEvent2 = new RsEvent("添加一条热搜", "娱乐", new User(
+                "huxiao1",
+                19,
+                "male",
+                "a111@thoughtworks.com",
+                "18888888888"));
+        String rsEventString2 = objectMapper.writeValueAsString(rsEvent2);
+
+        mockMvc.perform(post("/rs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(rsEventString2))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/rs/4"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user.email", is("a111@thoughtworks.com")));
+
+    }
+
     void shouldAddUserRsEvent(RsEvent rsEvent) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);
@@ -233,7 +261,7 @@ public class RsControllerTest {
         mockMvc.perform(post("/rs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rsEventString))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
     }
 }
 

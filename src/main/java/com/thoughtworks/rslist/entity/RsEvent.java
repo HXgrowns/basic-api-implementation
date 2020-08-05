@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.entity;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -10,6 +11,7 @@ public class RsEvent {
     @NotBlank
     private String keyword;
 
+    @Valid
     @NotNull
     private User user;
 
@@ -19,6 +21,12 @@ public class RsEvent {
     public RsEvent(String name, String keyword) {
         this.eventName = name;
         this.keyword = keyword;
+    }
+
+    public RsEvent(@NotBlank String eventName, @NotBlank String keyword, @NotNull User user) {
+        this.eventName = eventName;
+        this.keyword = keyword;
+        this.user = user;
     }
 
     public String getEventName() {
