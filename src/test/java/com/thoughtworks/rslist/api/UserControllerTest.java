@@ -58,17 +58,6 @@ public class UserControllerTest {
     }
 
     @Test
-    void shouldFailWhenNameIsNull() throws Exception {
-        User user = new User(
-                null,
-                19,
-                "female",
-                "a@thoughtworks.com",
-                "18888888888");
-        validUser(user);
-    }
-
-    @Test
     void shouldFailWhenGenderIsNull() throws Exception {
         User user = new User(
                 "huxiao",
@@ -76,9 +65,6 @@ public class UserControllerTest {
                 null,
                 "a@thoughtworks.com",
                 "18888888888");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String userString = objectMapper.writeValueAsString(user);
-
         validUser(user);
     }
 
@@ -139,7 +125,6 @@ public class UserControllerTest {
         validUser(user);
     }
 
-    @Test
     void validUser(User user) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String userString = objectMapper.writeValueAsString(user);

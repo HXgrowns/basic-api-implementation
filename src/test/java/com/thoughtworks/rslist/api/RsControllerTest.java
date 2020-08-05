@@ -112,8 +112,120 @@ public class RsControllerTest {
         shouldAddUserRsEvent(rsEvent);
     }
 
+    @Test
+    void shouldFailWhenEventNameIsNull() throws Exception {
+        RsEvent rsEvent = new RsEvent("", "娱乐");
+        User user = new User(
+                "huxiao",
+                19,
+                "male",
+                "a@thoughtworks.com",
+                "18888888888");
+        rsEvent.setUser(user);
+        shouldAddUserRsEvent(rsEvent);
+    }
 
     @Test
+    void shouldFailWhenUserNameInValid() throws Exception {
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐");
+        User user = new User(
+                null,
+                19,
+                "male",
+                "a@thoughtworks.com",
+                "18888888888");
+        rsEvent.setUser(user);
+        shouldAddUserRsEvent(rsEvent);
+
+        user = new User(
+                "xiaowang&huxiao",
+                19,
+                "female",
+                "a@thoughtworks.com",
+                "18888888888");
+        rsEvent.setUser(user);
+        shouldAddUserRsEvent(rsEvent);
+    }
+
+    @Test
+    void shouldFailWhenGenderIsNull() throws Exception {
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐");
+        User user = new User(
+                "huxiao",
+                19,
+                null,
+                "a@thoughtworks.com",
+                "18888888888");
+        rsEvent.setUser(user);
+        shouldAddUserRsEvent(rsEvent);
+    }
+
+    @Test
+    void shouldFailWhenAgeIsNullOrNotRange() throws Exception {
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐");
+        User user = new User(
+                "huxiao",
+                null,
+                "male",
+                "a@thoughtworks.com",
+                "18888888888");
+        rsEvent.setUser(user);
+        shouldAddUserRsEvent(rsEvent);
+
+        user = new User(
+                "huxiao",
+                7,
+                "male",
+                "a@thoughtworks.com",
+                "18888888888");
+        rsEvent.setUser(user);
+        shouldAddUserRsEvent(rsEvent);
+
+        user = new User(
+                "huxiao",
+                101,
+                "male",
+                "a@thoughtworks.com",
+                "18888888888");
+        rsEvent.setUser(user);
+        shouldAddUserRsEvent(rsEvent);
+    }
+
+    @Test
+    void shouldValidEmail() throws Exception {
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐");
+        User user = new User(
+                "huxiao",
+                19,
+                "male",
+                "athoughtworks.com",
+                "18888888888");
+        rsEvent.setUser(user);
+        shouldAddUserRsEvent(rsEvent);
+    }
+
+    @Test
+    void shouldValidPhone() throws Exception {
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐");
+        User user = new User(
+                "huxiao",
+                19,
+                "male",
+                "a@thoughtworks.com",
+                "08888888888");
+        rsEvent.setUser(user);
+        shouldAddUserRsEvent(rsEvent);
+
+        user = new User(
+                "huxiao",
+                19,
+                "male",
+                "a@thoughtworks.com",
+                "118888888888");
+        rsEvent.setUser(user);
+        shouldAddUserRsEvent(rsEvent);
+    }
+
     void shouldAddUserRsEvent(RsEvent rsEvent) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);
