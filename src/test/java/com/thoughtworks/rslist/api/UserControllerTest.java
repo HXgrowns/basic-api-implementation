@@ -60,4 +60,21 @@ public class UserControllerTest {
                 .content(userString))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void shouldFailWhenNameIsNull() throws Exception {
+        User user = new User(
+                null,
+                19,
+                "female",
+                "a@thoughtworks.com",
+                "18888888888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userString = objectMapper.writeValueAsString(user);
+
+        mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userString))
+                .andExpect(status().isBadRequest());
+    }
 }
