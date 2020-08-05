@@ -28,6 +28,12 @@ public class UserControllerTest {
     }
 
     @Test
+    void shouldGetUserList() throws Exception {
+        mockMvc.perform(get("/user"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void shouldValidUserName() throws Exception {
         User user = new User(
                 "xiaowang&huxiao",
