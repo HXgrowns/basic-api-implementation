@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.entity.RsEvent;
+import com.thoughtworks.rslist.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -94,6 +95,20 @@ public class RsControllerTest {
     @Test
     void shouldDeleteRsEvent() throws Exception {
         mockMvc.perform(delete("/rs/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldAddUserRsEvent() throws Exception {
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐");
+        User user = new User("xiaowang", 19, "female", "a@thoughtworks.com", "18888888888");
+        rsEvent.setUser(user);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String rsEventString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(rsEventString))
                 .andExpect(status().isOk());
     }
 }

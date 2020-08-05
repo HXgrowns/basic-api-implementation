@@ -14,7 +14,8 @@ public class User {
 
     @Min(18)
     @Max(100)
-    private int age;
+    @NotNull
+    private Integer age;
 
     @NotNull
     private String gender;
@@ -27,7 +28,7 @@ public class User {
 
     private int voteCount = 10;
 
-    public User(@Size(max = 8) String userName, @Min(18) @Max(100) int age, @NotNull String gender, @Email String email, @Pattern(regexp = "1\\d{10}") String phone) {
+    public User(@Size(max = 8) @NotNull String userName, @Min(18) @Max(100) @NotNull Integer age, @NotNull String gender, @Email String email, @Pattern(regexp = "1\\d{10}") String phone) {
         this.userName = userName;
         this.age = age;
         this.gender = gender;

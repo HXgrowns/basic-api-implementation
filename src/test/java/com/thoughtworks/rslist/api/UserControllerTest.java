@@ -35,30 +35,26 @@ public class UserControllerTest {
                 "female",
                 "a@thoughtworks.com",
                 "18888888888");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String userString = objectMapper.writeValueAsString(user);
-
-        mockMvc.perform(post("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userString))
-                .andExpect(status().isOk());
+        validUser(user);
     }
 
     @Test
-    void shouldFailWhenNameLongerThan8() throws Exception {
+    void shouldValidUserName() throws Exception {
         User user = new User(
                 "xiaowang&huxiao",
                 19,
                 "female",
                 "a@thoughtworks.com",
                 "18888888888");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String userString = objectMapper.writeValueAsString(user);
+        validUser(user);
 
-        mockMvc.perform(post("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userString))
-                .andExpect(status().isBadRequest());
+        user = new User(
+                null,
+                19,
+                "female",
+                "a@thoughtworks.com",
+                "18888888888");
+        validUser(user);
     }
 
     @Test
@@ -69,12 +65,88 @@ public class UserControllerTest {
                 "female",
                 "a@thoughtworks.com",
                 "18888888888");
+        validUser(user);
+    }
+
+    @Test
+    void shouldFailWhenGenderIsNull() throws Exception {
+        User user = new User(
+                "huxiao",
+                19,
+                null,
+                "a@thoughtworks.com",
+                "18888888888");
         ObjectMapper objectMapper = new ObjectMapper();
         String userString = objectMapper.writeValueAsString(user);
 
+        validUser(user);
+    }
+
+    @Test
+    void shouldFailWhenAgeIsNullOrNotRange() throws Exception {
+        User user = new User(
+                "huxiao",
+                null,
+                "male",
+                "a@thoughtworks.com",
+                "18888888888");
+        validUser(user);
+
+        user = new User(
+                "huxiao",
+                7,
+                "male",
+                "a@thoughtworks.com",
+                "18888888888");
+        validUser(user);
+
+        user = new User(
+                "huxiao",
+                101,
+                "male",
+                "a@thoughtworks.com",
+                "18888888888");
+        validUser(user);
+    }
+
+    @Test
+    void shouldValidEmail() throws Exception {
+        User user = new User(
+                "huxiao",
+                19,
+                "male",
+                "athoughtworks.com",
+                "18888888888");
+        validUser(user);
+    }
+
+    @Test
+    void shouldValidPhone() throws Exception {
+        User user = new User(
+                "huxiao",
+                19,
+                "male",
+                "a@thoughtworks.com",
+                "08888888888");
+        validUser(user);
+
+        user = new User(
+                "huxiao",
+                19,
+                "male",
+                "a@thoughtworks.com",
+                "118888888888");
+        validUser(user);
+    }
+
+    @Test
+    void validUser(User user) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userString = objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userString))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
+
 }
