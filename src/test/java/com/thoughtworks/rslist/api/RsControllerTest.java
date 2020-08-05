@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.entity.RsEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -32,7 +29,7 @@ public class RsControllerTest {
     @Test
     void shouldGetRsEventById() throws Exception {
         mockMvc.perform(get("/rs/0"))
-                .andExpect(jsonPath("$.name", is("第一条事件")))
+                .andExpect(jsonPath("$.eventName", is("第一条事件")))
                 .andExpect(jsonPath("$.keyword", is("one")))
                 .andExpect(status().isOk());
     }
@@ -40,32 +37,32 @@ public class RsControllerTest {
     @Test
     void shouldGetRsEventListByGivenRange() throws Exception {
         mockMvc.perform(get("/rs/list/?start=0&end=2"))
-                .andExpect(jsonPath("$[0].name", is("第一条事件")))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
                 .andExpect(jsonPath("$[0].keyword", is("one")))
-                .andExpect(jsonPath("$[1].name", is("第二条事件")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
                 .andExpect(jsonPath("$[1].keyword", is("two")))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/rs/list/?start=1"))
-                .andExpect(jsonPath("$[0].name", is("第二条事件")))
+                .andExpect(jsonPath("$[0].eventName", is("第二条事件")))
                 .andExpect(jsonPath("$[0].keyword", is("two")))
-                .andExpect(jsonPath("$[1].name", is("第三条事件")))
+                .andExpect(jsonPath("$[1].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[1].keyword", is("three")))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/rs/list/?end=2"))
-                .andExpect(jsonPath("$[0].name", is("第一条事件")))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
                 .andExpect(jsonPath("$[0].keyword", is("one")))
-                .andExpect(jsonPath("$[1].name", is("第二条事件")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
                 .andExpect(jsonPath("$[1].keyword", is("two")))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/rs/list"))
-                .andExpect(jsonPath("$[0].name", is("第一条事件")))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
                 .andExpect(jsonPath("$[0].keyword", is("one")))
-                .andExpect(jsonPath("$[1].name", is("第二条事件")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
                 .andExpect(jsonPath("$[1].keyword", is("two")))
-                .andExpect(jsonPath("$[2].name", is("第三条事件")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[2].keyword", is("three")))
                 .andExpect(status().isOk());
     }

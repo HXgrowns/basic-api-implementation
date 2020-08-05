@@ -50,7 +50,7 @@ public class RsController {
             return;
         }
         selectedRsEvent.setKeyword(rsEvent.getKeyword());
-        selectedRsEvent.setName(rsEvent.getName());
+        selectedRsEvent.setEventName(rsEvent.getEventName());
     }
 
     @GetMapping("/rs/listall")

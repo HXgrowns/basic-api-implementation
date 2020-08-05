@@ -1,23 +1,24 @@
 package com.thoughtworks.rslist.entity;
 
 public class RsEvent {
-    private String name;
+    private String eventName;
     private String keyword;
+    private User user;
 
     public RsEvent() {
     }
 
     public RsEvent(String name, String keyword) {
-        this.name = name;
+        this.eventName = name;
         this.keyword = keyword;
     }
 
-    public String getName() {
-        return name;
+    public String getEventName() {
+        return eventName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
     }
 
     public String getKeyword() {
@@ -28,11 +29,19 @@ public class RsEvent {
         this.keyword = keyword;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return String.format("{\n" +
                 "\"name\": \"%s\",\n" +
                 "\"keyword\": \"%s\"\n" +
-                "}", this.name, this.keyword);
+                "}", this.eventName, this.keyword);
     }
 }
