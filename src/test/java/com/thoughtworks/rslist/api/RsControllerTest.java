@@ -98,11 +98,23 @@ public class RsControllerTest {
                 .andExpect(status().isOk());
     }
 
+
     @Test
-    void shouldAddUserRsEvent() throws Exception {
-        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐");
-        User user = new User("xiaowang", 19, "female", "a@thoughtworks.com", "18888888888");
+    void shouldFailWhenKeywordIsNull() throws Exception {
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "");
+        User user = new User(
+                "huxiao",
+                19,
+                "male",
+                "a@thoughtworks.com",
+                "18888888888");
         rsEvent.setUser(user);
+        shouldAddUserRsEvent(rsEvent);
+    }
+
+
+    @Test
+    void shouldAddUserRsEvent(RsEvent rsEvent) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);
 

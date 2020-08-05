@@ -1,8 +1,16 @@
 package com.thoughtworks.rslist.entity;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class RsEvent {
+
+    @NotBlank
     private String eventName;
+    @NotBlank
     private String keyword;
+
+    @NotNull
     private User user;
 
     public RsEvent() {
