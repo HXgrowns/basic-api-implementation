@@ -34,7 +34,7 @@ public class RsController {
 
     @GetMapping("/{index}")
     public ResponseEntity<RsEvent> getRsEventById(@PathVariable int index) {
-        return new ResponseEntity<>(rsEventList.get(index), HttpStatus.OK);
+        return ResponseEntity.ok(rsEventList.get(index));
     }
 
     @GetMapping(value = "/list")
@@ -42,13 +42,13 @@ public class RsController {
         if (end == null) {
             end = rsEventList.size();
         }
-        return new ResponseEntity<>(rsEventList.subList(start, end), HttpStatus.OK);
+        return ResponseEntity.ok(rsEventList.subList(start, end));
     }
 
     @PostMapping
-    public void addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
+    public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
         if (rsEvent == null) {
-            return;
+            return ResponseEntity.badRequest().build();
         }
 
         for (RsEvent event : rsEventList) {
@@ -63,29 +63,33 @@ public class RsController {
         }
 
         rsEventList.add(rsEvent);
+
+        return ResponseEntity.status(HttpStatus.CREATED).header("index", rsEventList.size() - 1 + "").build();
     }
 
     @PutMapping(value = "/{index}")
-    public void updateRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
+    public ResponseEntity<Object> updateRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
         RsEvent selectedRsEvent = rsEventList.get(index);
         if (selectedRsEvent == null) {
-            return;
+            return ResponseEntity.badRequest().build();
         }
         selectedRsEvent.setKeyword(rsEvent.getKeyword());
         selectedRsEvent.setEventName(rsEvent.getEventName());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/rs/listall")
     public ResponseEntity<List<RsEvent>> GetRsEventList() {
-        return new ResponseEntity<>(rsEventList, HttpStatus.OK);
+        return ResponseEntity.ok(rsEventList);
     }
 
     @DeleteMapping("/{index}")
-    public void deleteRsEvent(@PathVariable int index) {
+    public ResponseEntity<Object> deleteRsEvent(@PathVariable int index) {
         RsEvent selectedRsEvent = rsEventList.get(index);
         if (selectedRsEvent == null) {
-            return;
+            return ResponseEntity.badRequest().build();
         }
         rsEventList.remove(index);
+        return ResponseEntity.ok().build();
     }
 }

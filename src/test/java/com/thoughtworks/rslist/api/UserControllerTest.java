@@ -28,17 +28,6 @@ public class UserControllerTest {
     }
 
     @Test
-    void shouldRegisterUser() throws Exception {
-        User user = new User(
-                "xiaowang",
-                19,
-                "female",
-                "a@thoughtworks.com",
-                "18888888888");
-        validUser(user);
-    }
-
-    @Test
     void shouldValidUserName() throws Exception {
         User user = new User(
                 "xiaowang&huxiao",
@@ -131,7 +120,7 @@ public class UserControllerTest {
         mockMvc.perform(post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userString))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
     }
 
 }

@@ -229,7 +229,7 @@ public class RsControllerTest {
         mockMvc.perform(post("/rs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rsEventString1))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         mockMvc.perform(get("/rs/3"))
                 .andExpect(status().isOk())
@@ -246,7 +246,7 @@ public class RsControllerTest {
         mockMvc.perform(post("/rs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rsEventString2))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         mockMvc.perform(get("/rs/4"))
                 .andExpect(status().isOk())
