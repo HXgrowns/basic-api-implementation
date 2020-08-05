@@ -38,6 +38,10 @@ public class RsControllerTest {
                 .andExpect(jsonPath("$.keyword", is("one")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.user").doesNotExist());
+
+        mockMvc.perform(get("/rs/-1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("invalid index")));
     }
 
     @Test

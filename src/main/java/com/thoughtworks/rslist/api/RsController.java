@@ -33,13 +33,16 @@ public class RsController {
     }
 
     @GetMapping("/{index}")
-    public ResponseEntity<RsEvent> getRsEventById(@PathVariable int index) {
+    public ResponseEntity<RsEvent> getRsEventById(@PathVariable int index) throws InvalidIndexException {
+        if (index > rsEventList.size() - 1 || index < 0) {
+            throw new InvalidIndexException("invalid index");
+        }
         return ResponseEntity.ok(rsEventList.get(index));
     }
 
     @GetMapping(value = "/list")
     public ResponseEntity<List<RsEvent>> GetRsEventListByGivenRange(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) throws InvalidIndexException {
-        if(start == null) {
+        if (start == null) {
             start = 0;
         }
 
@@ -47,7 +50,7 @@ public class RsController {
             end = rsEventList.size();
         }
 
-        if(start < 0 || end > rsEventList.size()) {
+        if (start < 0 || end > rsEventList.size()) {
             throw new InvalidIndexException("invalid request param");
         }
 
