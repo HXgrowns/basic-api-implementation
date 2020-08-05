@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.entity.RsEvent;
 import com.thoughtworks.rslist.entity.User;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,13 +11,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.hamcrest.Matchers.is;
 
 @SpringBootTest
 public class RsControllerTest {
@@ -32,7 +33,8 @@ public class RsControllerTest {
         mockMvc.perform(get("/rs/0"))
                 .andExpect(jsonPath("$.eventName", is("第一条事件")))
                 .andExpect(jsonPath("$.keyword", is("one")))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user").doesNotExist());
     }
 
     @Test
@@ -216,7 +218,7 @@ public class RsControllerTest {
 
     @Test
     void shouldFailWhenExist() throws Exception {
-        RsEvent rsEvent1 = new RsEvent("添加一条热搜", "娱乐", new User(
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", new User(
                 "huxiao",
                 19,
                 "male",
@@ -224,34 +226,12 @@ public class RsControllerTest {
                 "18888888888"));
 
         ObjectMapper objectMapper = new ObjectMapper();
-        String rsEventString1 = objectMapper.writeValueAsString(rsEvent1);
+        String rsEventString = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rsEventString1))
+                .content(rsEventString))
                 .andExpect(status().isCreated());
-
-        mockMvc.perform(get("/rs/3"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.email", is("a@thoughtworks.com")));
-
-        RsEvent rsEvent2 = new RsEvent("添加一条热搜", "娱乐", new User(
-                "huxiao1",
-                19,
-                "male",
-                "a111@thoughtworks.com",
-                "18888888888"));
-        String rsEventString2 = objectMapper.writeValueAsString(rsEvent2);
-
-        mockMvc.perform(post("/rs")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(rsEventString2))
-                .andExpect(status().isCreated());
-
-        mockMvc.perform(get("/rs/4"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.email", is("a111@thoughtworks.com")));
-
     }
 
     void shouldAddUserRsEvent(RsEvent rsEvent) throws Exception {

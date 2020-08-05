@@ -1,5 +1,8 @@
 package com.thoughtworks.rslist.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,7 +15,6 @@ public class RsEvent {
     private String keyword;
 
     @Valid
-    @NotNull
     private User user;
 
     public RsEvent() {
@@ -45,10 +47,12 @@ public class RsEvent {
         this.keyword = keyword;
     }
 
+    @JsonIgnore
     public User getUser() {
         return user;
     }
 
+    @JsonProperty
     public void setUser(User user) {
         this.user = user;
     }
