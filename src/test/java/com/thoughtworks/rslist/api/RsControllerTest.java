@@ -36,8 +36,7 @@ public class RsControllerTest {
         mockMvc.perform(get("/rs/0"))
                 .andExpect(jsonPath("$.eventName", is("第一条事件")))
                 .andExpect(jsonPath("$.keyword", is("one")))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user").doesNotExist());
+                .andExpect(status().isOk());
 
         mockMvc.perform(get("/rs/-1"))
                 .andExpect(status().isBadRequest())
@@ -202,6 +201,7 @@ public class RsControllerTest {
                 "athoughtworks.com",
                 "18888888888");
         rsEvent.setUser(user);
+
         shouldAddUserRsEvent(rsEvent);
     }
 
@@ -253,6 +253,19 @@ public class RsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rsEventString))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldValidRsEvent() throws Exception {
+        RsEvent rsEvent = new RsEvent();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String rsEventString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(rsEventString))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("invalid param")));
     }
 }
 

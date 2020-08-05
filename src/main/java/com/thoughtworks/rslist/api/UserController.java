@@ -1,11 +1,13 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.entity.User;
+import com.thoughtworks.rslist.exception.CommonError;
+import com.thoughtworks.rslist.exception.InvalidUserException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,12 +26,26 @@ public class UserController {
     }
 
     @PostMapping
-    public void addUser(@RequestBody @Valid User user) {
-        userList.add(user);
+    public void addUser(@RequestBody @Valid User user, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new InvalidUserException("invalid user");
+        }
+
+        if(user != null) {
+            userList.add(user);
+        }
     }
 
     @GetMapping
     public ResponseEntity<List<User>> getUserList() {
         return ResponseEntity.ok(userList);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity exceptionHandler(RuntimeException e) {
+        CommonError commonError = new CommonError();
+        commonError.setError(e.getMessage());
+
+        return ResponseEntity.badRequest().body(commonError);
     }
 }
