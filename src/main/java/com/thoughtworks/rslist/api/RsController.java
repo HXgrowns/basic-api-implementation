@@ -2,6 +2,8 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.entity.RsEvent;
 import com.thoughtworks.rslist.entity.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +13,6 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/rs")
@@ -33,16 +33,16 @@ public class RsController {
     }
 
     @GetMapping("/{index}")
-    public RsEvent getRsEventById(@PathVariable int index) {
-        return rsEventList.get(index);
+    public ResponseEntity<RsEvent> getRsEventById(@PathVariable int index) {
+        return new ResponseEntity<>(rsEventList.get(index), HttpStatus.OK);
     }
 
     @GetMapping(value = "/list")
-    public List<RsEvent> GetRsEventListByGivenRange(@RequestParam(required = false, defaultValue = "0") Integer start, @RequestParam(required = false) Integer end) {
+    public ResponseEntity<List<RsEvent>> GetRsEventListByGivenRange(@RequestParam(required = false, defaultValue = "0") Integer start, @RequestParam(required = false) Integer end) {
         if (end == null) {
             end = rsEventList.size();
         }
-        return rsEventList.subList(start, end);
+        return new ResponseEntity<>(rsEventList.subList(start, end), HttpStatus.OK);
     }
 
     @PostMapping
@@ -52,11 +52,11 @@ public class RsController {
         }
 
         for (RsEvent event : rsEventList) {
-            if(event.getUser() == null || rsEvent.getUser() == null || rsEvent.getUser().getUserName() == null) {
+            if (event.getUser() == null || rsEvent.getUser() == null || rsEvent.getUser().getUserName() == null) {
                 continue;
             }
 
-            if(rsEvent.getUser().getUserName().equals(event.getUser().getUserName())) {
+            if (rsEvent.getUser().getUserName().equals(event.getUser().getUserName())) {
                 rsEvent.setUser(event.getUser());
                 break;
             }
@@ -76,8 +76,8 @@ public class RsController {
     }
 
     @GetMapping("/rs/listall")
-    public List<RsEvent> GetRsEventList() {
-        return rsEventList;
+    public ResponseEntity<List<RsEvent>> GetRsEventList() {
+        return new ResponseEntity<>(rsEventList, HttpStatus.OK);
     }
 
     @DeleteMapping("/{index}")
