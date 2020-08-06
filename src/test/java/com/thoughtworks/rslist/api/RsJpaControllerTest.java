@@ -11,8 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -22,8 +21,9 @@ class RsJpaControllerTest {
     MockMvc mockMvc;
 
     @Test
-    void should1() throws Exception {
+    void shouldAddEventSuccess() throws Exception {
         UserEntity user = new UserEntity(new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888"));
+        user.setId(2);
         RsEventEntity rsEvent = new RsEventEntity("first event", "one", user);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -33,5 +33,39 @@ class RsJpaControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rsEventString))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void shouldAddEventFail() throws Exception {
+        UserEntity user = new UserEntity(new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888"));
+        user.setId(0);
+        RsEventEntity rsEvent = new RsEventEntity("first event", "one", user);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String rsEventString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(rsEventString))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldDeleteUserAndRsEvens() throws Exception {
+        mockMvc.perform(delete("/user/2"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldAddUser() throws Exception {
+        User user = new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userString = objectMapper.writeValueAsString(user);
+
+        mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userString))
+                .andExpect(status().isOk());
     }
 }

@@ -21,7 +21,7 @@ public class RsEventEntity {
     private String eventName;
     private String keyword;
 
-    @ManyToOne(targetEntity = UserEntity.class, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = UserEntity.class, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 

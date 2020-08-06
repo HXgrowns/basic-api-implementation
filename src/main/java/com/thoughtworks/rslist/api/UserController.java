@@ -5,6 +5,8 @@ import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidUserException;
 import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.service.RsEventService;
+import com.thoughtworks.rslist.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,12 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    RsEventService rsEventService;
 
     @PostMapping
     public ResponseEntity addUser(@RequestBody(required = false) @Valid User user, BindingResult bindingResult) {
@@ -65,9 +73,12 @@ public class UserController {
         return ResponseEntity.badRequest().body(commonError);
     }
 
-    @DeleteMapping("/{index}")
-    public ResponseEntity deleteUserById(@PathVariable Integer index) {
-        userRepository.findById(index).ifPresent(o -> userRepository.deleteById(index));
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUserById(@PathVariable Integer id) {
+
+        rsEventService.deleteByUserId(id);
+
+        userRepository.findById(id).ifPresent(o -> userService.deleteById(id));
         return ResponseEntity.ok().build();
     }
 }

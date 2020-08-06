@@ -26,9 +26,6 @@ class RsListApplicationTests {
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired
-    UserRepository userRepository;
-
     @BeforeEach
     void setUp() {
     }
@@ -71,12 +68,6 @@ class RsListApplicationTests {
                 .andExpect(status().isOk());
 
         mockMvc.perform(delete("/user/8"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void shouldFineUserById1() throws Exception {
-        mockMvc.perform(get("/student/hello"))
                 .andExpect(status().isOk());
     }
 }
