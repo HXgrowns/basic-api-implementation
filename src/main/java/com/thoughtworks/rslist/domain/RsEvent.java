@@ -1,4 +1,4 @@
-package com.thoughtworks.rslist.entity;
+package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;

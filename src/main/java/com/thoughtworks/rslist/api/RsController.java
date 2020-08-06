@@ -1,8 +1,8 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.thoughtworks.rslist.entity.RsEvent;
-import com.thoughtworks.rslist.entity.User;
+import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
 import com.thoughtworks.rslist.exception.InvalidParamException;

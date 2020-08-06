@@ -1,6 +1,6 @@
 package com.thoughtworks.rslist.api;
 
-import com.thoughtworks.rslist.entity.User;
+import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidUserException;
 import org.springframework.http.ResponseEntity;
