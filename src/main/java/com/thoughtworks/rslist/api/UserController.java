@@ -12,8 +12,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Id;
 import javax.validation.Valid;
 import java.util.*;
+import java.util.function.Consumer;
 
 @RestController
 @RequestMapping("/user")
@@ -41,6 +43,7 @@ public class UserController {
         }
 
         UserEntity userEntity = UserEntity.builder()
+                .id(user.getId())
                 .name(user.getUserName())
                 .gender(user.getGender())
                 .age(user.getAge())
@@ -54,9 +57,7 @@ public class UserController {
 
     @GetMapping("/{index}")
     public ResponseEntity<UserEntity> getUserByUserId(@PathVariable Integer index) {
-        Optional<UserEntity> optional = userRepository.findById(index);
-        UserEntity userEntity = optional.orElse(null);
-        return ResponseEntity.ok(userEntity);
+        return ResponseEntity.ok(userRepository.findById(index).orElse(null));
     }
 
     @GetMapping
@@ -70,5 +71,11 @@ public class UserController {
         commonError.setError(e.getMessage());
 
         return ResponseEntity.badRequest().body(commonError);
+    }
+
+    @DeleteMapping("/{index}")
+    public ResponseEntity deleteUserById(@PathVariable Integer index) {
+        userRepository.findById(index).ifPresent(o -> userRepository.deleteById(index));
+        return ResponseEntity.ok().build();
     }
 }

@@ -14,8 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,9 +53,25 @@ class RsListApplicationTests {
 
     @Test
     void shouldFineUserById() throws Exception {
-        mockMvc.perform(get("/user/5"))
+        shouldRegisterUser();
+
+        mockMvc.perform(get("/user/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("huxiao")));
+    }
+
+    @Test
+    void shouldDeleteUserById() throws Exception {
+        User user = new User("zhangsan", 18, "female", "hu@thoughtworks.com", "18788818888");
+        user.setId(8);
+        String userString = objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userString))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/user/8"))
+                .andExpect(status().isOk());
     }
 
 }

@@ -11,6 +11,8 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @JsonView(RsEvent.PrivateView.class)
 public class User {
+    private int id;
+
     @Size(max = 8)
     @NotBlank(message = "user name is null")
     @JsonProperty("userName")
@@ -47,4 +49,6 @@ public class User {
         this.email = email;
         this.phone = phone;
     }
+
+
 }
