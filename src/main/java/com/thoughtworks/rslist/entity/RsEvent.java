@@ -1,21 +1,32 @@
 package com.thoughtworks.rslist.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@Data
 public class RsEvent {
+    public interface  PublicView{
 
+    }
+
+    public interface PrivateView extends PublicView{
+
+    }
+
+    @JsonView(PublicView.class)
     @NotBlank
     private String eventName;
+
     @NotBlank
+    @JsonView(PublicView.class)
     private String keyword;
 
-    @Valid
-    private User user;
+    @JsonView(PrivateView.class)
+    private @Valid User user;
 
     public RsEvent() {
     }

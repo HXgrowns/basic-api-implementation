@@ -1,9 +1,18 @@
 package com.thoughtworks.rslist.component;
 
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.thoughtworks.rslist.exception.CommonError;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@RestControllerAdvice(basePackages = "com/thoughtworks/rslist/api")
+@ControllerAdvice
 public class MyExceptionHandler {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity exceptionHandler(RuntimeException e) {
+        CommonError commonError = new CommonError();
+        commonError.setError(e.getMessage());
 
+        return ResponseEntity.badRequest().body(commonError);
+    }
 
 }

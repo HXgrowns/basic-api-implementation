@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@ControllerAdvice
 public class UserController {
     private List<User> userList;
 
@@ -41,11 +42,11 @@ public class UserController {
         return ResponseEntity.ok(userList);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity exceptionHandler(RuntimeException e) {
-        CommonError commonError = new CommonError();
-        commonError.setError(e.getMessage());
-
-        return ResponseEntity.badRequest().body(commonError);
-    }
+    //@ExceptionHandler(RuntimeException.class)
+    //public ResponseEntity exceptionHandler(RuntimeException e) {
+    //    CommonError commonError = new CommonError();
+    //    commonError.setError(e.getMessage());
+    //
+    //    return ResponseEntity.badRequest().body(commonError);
+    //}
 }

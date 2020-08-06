@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.api;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.entity.RsEvent;
 import com.thoughtworks.rslist.entity.User;
 import com.thoughtworks.rslist.exception.CommonError;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/rs")
+@ControllerAdvice
 public class RsController {
 
     private List<RsEvent> rsEventList;
@@ -37,6 +39,7 @@ public class RsController {
     }
 
     @GetMapping("/{index}")
+    @JsonView(RsEvent.PrivateView.class)
     public ResponseEntity<RsEvent> getRsEventById(@PathVariable int index) throws InvalidIndexException {
         if (index > rsEventList.size() - 1 || index < 0) {
             throw new InvalidIndexException("invalid index");
@@ -45,6 +48,7 @@ public class RsController {
     }
 
     @GetMapping(value = "/list")
+    @JsonView(RsEvent.PublicView.class)
     public ResponseEntity<List<RsEvent>> GetRsEventListByGivenRange(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) throws InvalidIndexException {
         if (start == null) {
             start = 0;
@@ -62,6 +66,7 @@ public class RsController {
     }
 
     @PostMapping
+    @JsonView(RsEvent.PrivateView.class)
     public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent, BindingResult bindingResult) throws InvalidParamException {
         if (rsEvent == null) {
             return ResponseEntity.badRequest().build();
@@ -71,10 +76,10 @@ public class RsController {
             throw new InvalidParamException("invalid param");
         }
 
-        //User user = rsEvent.getUser();
-        //if(user != null && (user.getPhone() == null || user.getUserName() == null || user.getEmail() == null) {
-        //    throw new InvalidParamException("invalid param");
-        //}
+        User user = rsEvent.getUser();
+        if(user != null && (user.getPhone() == null || user.getUserName() == null || user.getEmail() == null)) {
+            throw new InvalidParamException("invalid param");
+        }
 
         for (RsEvent event : rsEventList) {
             if (event.getUser() == null || rsEvent.getUser() == null || rsEvent.getUser().getUserName() == null) {
