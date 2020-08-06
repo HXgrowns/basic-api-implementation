@@ -2,10 +2,12 @@ package com.thoughtworks.rslist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.api.RsController;
+import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +39,7 @@ class RsListApplicationTests {
     @Autowired
     RsController rsController;
 
+    @Test
     void shouldAddUser() throws Exception {
         UserEntity user = new UserEntity("huxiao", 20, "female", "hu@thoughtworks.com", "18888888888");
         String userString = objectMapper.writeValueAsString(user);
