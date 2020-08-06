@@ -9,12 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -36,6 +35,11 @@ public class UserController {
     @PostMapping
     public ResponseEntity addUser(@RequestBody(required = false) @Valid User user, BindingResult bindingResult) {
 
+        if (bindingResult.hasErrors()) {
+            String msg = bindingResult.getFieldError().getDefaultMessage();
+            throw new InvalidUserException(msg);
+        }
+
         UserEntity userEntity = UserEntity.builder()
                 .name(user.getUserName())
                 .gender(user.getGender())
@@ -46,6 +50,13 @@ public class UserController {
                 .build();
         userRepository.save(userEntity);
         return ResponseEntity.status(HttpStatus.OK).header("index", "ok").build();
+    }
+
+    @GetMapping("/{index}")
+    public ResponseEntity<UserEntity> getUserByUserId(@PathVariable Integer index) {
+        Optional<UserEntity> optional = userRepository.findById(index);
+        UserEntity userEntity = optional.orElse(null);
+        return ResponseEntity.ok(userEntity);
     }
 
     @GetMapping

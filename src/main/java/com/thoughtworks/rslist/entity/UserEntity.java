@@ -25,11 +25,5 @@ public class UserEntity {
     private String phone;
     private int vote;
 
-    //public UserEntity(String userName, int age, String gender, String email, String phone) {
-    //    this.name = userName;
-    //    this.age = age;
-    //    this.gender = gender;
-    //    this.email = email;
-    //    this.phone = phone;
-    //}
+
 }
