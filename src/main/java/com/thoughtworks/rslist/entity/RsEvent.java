@@ -9,13 +9,10 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class RsEvent {
-    public interface  PublicView{
-
+    public interface PublicView {
     }
 
-    public interface PrivateView extends PublicView{
-
-    }
+    public interface PrivateView extends PublicView {}
 
     @JsonView(PublicView.class)
     @NotBlank
@@ -36,7 +33,7 @@ public class RsEvent {
         this.keyword = keyword;
     }
 
-    public RsEvent(@NotBlank String eventName, @NotBlank String keyword, @NotNull User user) {
+    public RsEvent(@NotBlank String eventName, @NotBlank String keyword, @NotNull @Valid User user) {
         this.eventName = eventName;
         this.keyword = keyword;
         this.user = user;
@@ -58,12 +55,10 @@ public class RsEvent {
         this.keyword = keyword;
     }
 
-    //@JsonIgnore
     public User getUser() {
         return user;
     }
 
-    //@JsonProperty
     public void setUser(User user) {
         this.user = user;
     }

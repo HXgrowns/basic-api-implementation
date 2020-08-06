@@ -91,9 +91,7 @@ public class RsController {
                 break;
             }
         }
-
         rsEventList.add(rsEvent);
-
         return ResponseEntity.status(HttpStatus.CREATED).header("index", rsEventList.size() - 1 + "").build();
     }
 
