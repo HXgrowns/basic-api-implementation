@@ -18,18 +18,12 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String userName;
+    private String name;
     private int age;
     private String gender;
     private String email;
     private String phone;
-    private int VoteNum;
+    private int vote;
 
-    public UserEntity(String userName, int age, String gender, String email, String phone) {
-        this.userName = userName;
-        this.age = age;
-        this.gender = gender;
-        this.email = email;
-        this.phone = phone;
-    }
+
 }

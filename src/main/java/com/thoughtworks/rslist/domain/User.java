@@ -11,13 +11,15 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @JsonView(RsEvent.PrivateView.class)
 public class User {
+    private int id;
+
     @Size(max = 8)
-    @NotBlank
+    @NotBlank(message = "user name is null")
     @JsonProperty("userName")
     private String userName;
 
-    @Min(18)
-    @Max(100)
+    @Min(value = 18, message = "age < 18")
+    @Max(value = 100, message = "age > 100")
     @NotNull
     @JsonProperty("age")
     private Integer age;
@@ -30,7 +32,7 @@ public class User {
     @JsonProperty("email")
     private String email;
 
-    @Pattern(regexp = "1\\d{10}")
+    @Pattern(regexp = "1\\d{10}", message = "invalid phone")
     @JsonProperty("phone")
     private String phone;
 
@@ -47,4 +49,6 @@ public class User {
         this.email = email;
         this.phone = phone;
     }
+
+
 }
