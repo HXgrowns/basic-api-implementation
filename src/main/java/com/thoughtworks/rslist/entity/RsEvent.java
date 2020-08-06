@@ -42,32 +42,6 @@ public class RsEvent {
         this.user = user;
     }
 
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public String getKeyword() {
-        return keyword;
-    }
-
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
-
-    //@JsonIgnore
-    public User getUser() {
-        return user;
-    }
-
-    //@JsonProperty
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @Override
     public String toString() {
         return String.format("{\n" +
