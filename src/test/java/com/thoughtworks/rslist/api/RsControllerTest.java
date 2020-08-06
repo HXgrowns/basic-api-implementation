@@ -3,16 +3,12 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.entity.RsEvent;
 import com.thoughtworks.rslist.entity.User;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -201,7 +197,6 @@ public class RsControllerTest {
                 "athoughtworks.com",
                 "18888888888");
         rsEvent.setUser(user);
-
         shouldAddUserRsEvent(rsEvent);
     }
 
@@ -235,7 +230,6 @@ public class RsControllerTest {
                 "male",
                 "a111@thoughtworks.com",
                 "18888888888"));
-
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);
 
