@@ -74,4 +74,9 @@ class RsListApplicationTests {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void shouldFineUserById1() throws Exception {
+        mockMvc.perform(get("/student/hello"))
+                .andExpect(status().isOk());
+    }
 }

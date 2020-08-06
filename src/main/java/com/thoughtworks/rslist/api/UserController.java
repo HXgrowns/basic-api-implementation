@@ -42,15 +42,7 @@ public class UserController {
             throw new InvalidUserException(msg);
         }
 
-        UserEntity userEntity = UserEntity.builder()
-                .id(user.getId())
-                .name(user.getUserName())
-                .gender(user.getGender())
-                .age(user.getAge())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .vote(user.getVoteCount())
-                .build();
+        UserEntity userEntity = new UserEntity(user);
         userRepository.save(userEntity);
         return ResponseEntity.status(HttpStatus.OK).header("index", "ok").build();
     }

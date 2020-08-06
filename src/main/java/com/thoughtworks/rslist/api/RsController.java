@@ -3,9 +3,15 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.entity.RsEventEntity;
+import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
 import com.thoughtworks.rslist.exception.InvalidParamException;
+import com.thoughtworks.rslist.exception.InvalidRSException;
+import com.thoughtworks.rslist.repository.RsEventRepository;
+import com.thoughtworks.rslist.service.RsEventService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -25,6 +31,12 @@ import java.util.List;
 public class RsController {
 
     private List<RsEvent> rsEventList;
+
+    @Autowired
+    private RsEventRepository rsEventRepository;
+
+    @Autowired
+    private RsEventService rsEventService;
 
     public RsController() {
         this.rsEventList = new ArrayList<>(Arrays.asList(new RsEvent("第一条事件", "one",
@@ -93,6 +105,13 @@ public class RsController {
         }
         rsEventList.add(rsEvent);
         return ResponseEntity.status(HttpStatus.CREATED).header("index", rsEventList.size() - 1 + "").build();
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity add(@RequestBody RsEventEntity rsEventEntity) {
+        RsEventEntity rs = rsEventService.save(rsEventEntity);
+
+        return ResponseEntity.status(HttpStatus.CREATED).header("index", rs.getId() + "").build();
     }
 
     @PutMapping(value = "/{index}")

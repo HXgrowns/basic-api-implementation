@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class RsEvent {
+    private Integer id;
     public interface  PublicView{
 
     }
@@ -18,15 +19,15 @@ public class RsEvent {
     }
 
     @JsonView(PublicView.class)
-    @NotBlank
+    @NotBlank(message = "eventName is null")
     private String eventName;
 
-    @NotBlank
+    @NotBlank(message = "keyword is null")
     @JsonView(PublicView.class)
     private String keyword;
 
     @JsonView(PrivateView.class)
-    private @Valid User user;
+    private User user;
 
     public RsEvent() {
     }
