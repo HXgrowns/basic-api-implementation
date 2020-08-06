@@ -1,8 +1,12 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidUserException;
+import com.thoughtworks.rslist.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -26,15 +30,22 @@ public class UserController {
                         20, "female", "hu@thoughtworks.com", "12222222222")));
     }
 
-    @PostMapping
-    public void addUser(@RequestBody @Valid User user, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            throw new InvalidUserException("invalid user");
-        }
+    @Autowired
+    UserRepository userRepository;
 
-        if(user != null) {
-            userList.add(user);
-        }
+    @PostMapping
+    public ResponseEntity addUser(@RequestBody(required = false) @Valid User user, BindingResult bindingResult) {
+
+        UserEntity userEntity = UserEntity.builder()
+                .name(user.getUserName())
+                .gender(user.getGender())
+                .age(user.getAge())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .vote(user.getVoteCount())
+                .build();
+        userRepository.save(userEntity);
+        return ResponseEntity.status(HttpStatus.OK).header("index", "ok").build();
     }
 
     @GetMapping
