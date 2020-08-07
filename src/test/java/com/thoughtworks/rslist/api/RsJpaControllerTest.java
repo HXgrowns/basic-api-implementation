@@ -22,14 +22,15 @@ class RsJpaControllerTest {
 
     @Test
     void shouldAddEventSuccess() throws Exception {
-        UserEntity user = new UserEntity(new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888"));
-        user.setId(2);
-        RsEventEntity rsEvent = new RsEventEntity("first event", "one", user);
+        shouldAddUser();
 
+        UserEntity user = new UserEntity(new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888"));
+        user.setId(1);
+        RsEventEntity rsEvent = new RsEventEntity("first event", "one", user);
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(post("/rs/add")
+        mockMvc.perform(post("/rs/jpa")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rsEventString))
                 .andExpect(status().isCreated());
@@ -44,7 +45,7 @@ class RsJpaControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(post("/rs/add")
+        mockMvc.perform(post("/rs/jpa")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rsEventString))
                 .andExpect(status().isBadRequest());
@@ -58,7 +59,7 @@ class RsJpaControllerTest {
 
     @Test
     void shouldAddUser() throws Exception {
-        User user = new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888");
+        User user = new User("hu", 18, "female", "hu@thoughtworks.com", "18888818888");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String userString = objectMapper.writeValueAsString(user);
@@ -67,5 +68,21 @@ class RsJpaControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userString))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldUpdateRsEvent() throws Exception {
+        shouldAddEventSuccess();
+        UserEntity user = new UserEntity(new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888"));
+        user.setId(1);
+        RsEventEntity rsEvent = new RsEventEntity("new event", "new one", user);
+        rsEvent.setId(1);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String rsEventString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(patch("/rs/jpa/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(rsEventString))
+                .andExpect(status().isCreated());
     }
 }

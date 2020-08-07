@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "rs_event")
@@ -20,10 +22,16 @@ public class RsEventEntity {
 
     private String eventName;
     private String keyword;
+    //private Integer userId;
 
     @ManyToOne(targetEntity = UserEntity.class, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
+
+    public RsEventEntity(String eventName, String keyword) {
+        this.eventName = eventName;
+        this.keyword = keyword;
+    }
 
     public RsEventEntity(RsEvent rsEvent) {
         this.id = rsEvent.getId();

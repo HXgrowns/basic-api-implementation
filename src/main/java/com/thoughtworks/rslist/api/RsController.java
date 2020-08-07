@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.entity.RsEventEntity;
-import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
 import com.thoughtworks.rslist.exception.InvalidParamException;
-import com.thoughtworks.rslist.exception.InvalidRSException;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.service.RsEventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +22,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/rs")
@@ -89,7 +88,7 @@ public class RsController {
         }
 
         User user = rsEvent.getUser();
-        if(user != null && (user.getPhone() == null || user.getUserName() == null || user.getEmail() == null)) {
+        if (user != null && (user.getPhone() == null || user.getUserName() == null || user.getEmail() == null)) {
             throw new InvalidParamException("invalid param");
         }
 
@@ -105,13 +104,6 @@ public class RsController {
         }
         rsEventList.add(rsEvent);
         return ResponseEntity.status(HttpStatus.CREATED).header("index", rsEventList.size() - 1 + "").build();
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity add(@RequestBody RsEventEntity rsEventEntity) {
-        RsEventEntity rs = rsEventService.save(rsEventEntity);
-
-        return ResponseEntity.status(HttpStatus.CREATED).header("index", rs.getId() + "").build();
     }
 
     @PutMapping(value = "/{index}")
@@ -138,6 +130,18 @@ public class RsController {
         }
         rsEventList.remove(index);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/jpa")
+    public ResponseEntity add(@RequestBody RsEventEntity rsEventEntity) {
+        RsEventEntity rs = rsEventService.save(rsEventEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).header("index", rs.getId() + "").build();
+    }
+
+    @PatchMapping(value = "/jpa/{index}")
+    public ResponseEntity<Object> update(@PathVariable int index, @RequestBody RsEventEntity inputRsEventEntity) {
+        RsEventEntity rs = rsEventService.update(index, inputRsEventEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).header("index", rs.getId() + "").build();
     }
 
     @ExceptionHandler(RuntimeException.class)
