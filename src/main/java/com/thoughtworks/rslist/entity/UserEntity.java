@@ -1,6 +1,5 @@
 package com.thoughtworks.rslist.entity;
 
-import com.thoughtworks.rslist.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,19 +20,10 @@ public class UserEntity {
     private Integer id;
 
     private String name;
-    private int age;
+    private Integer age;
     private String gender;
     private String email;
     private String phone;
-    private int vote;
-
-    public UserEntity(User user) {
-        this.id = user.getId();
-        this.name = user.getUserName();
-        this.age = user.getAge();
-        this.gender = user.getGender();
-        this.email = user.getEmail();
-        this.phone = user.getPhone();
-        this.vote = user.getVoteCount();
-    }
+    @Column(name = "vote_num", columnDefinition = "tinyint default 10")
+    private Integer vote;
 }

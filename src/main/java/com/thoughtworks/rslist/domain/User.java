@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.thoughtworks.rslist.entity.UserEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,7 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @JsonView(RsEvent.PrivateView.class)
 public class User {
-    private Integer id;
+    private int id;
 
     @Size(max = 8)
     @NotBlank(message = "user name is null")
@@ -36,7 +37,7 @@ public class User {
     @JsonProperty("phone")
     private String phone;
 
-    private int voteCount = 10;
+    private Integer voteCount;
 
     public User(@Size(max = 8) @NotNull String userName,
                 @Min(18) @Max(100) @NotNull Integer age,
@@ -50,5 +51,16 @@ public class User {
         this.phone = phone;
     }
 
+    public UserEntity build() {
+        return UserEntity.builder()
+                .id(this.id)
+                .age(this.age)
+                .email(this.email)
+                .name(this.userName)
+                .gender(this.getGender())
+                .phone(this.phone)
+                .vote(10)
+                .build();
+    }
 
 }
