@@ -50,7 +50,7 @@ public class RsController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/vote/jpa/{index}")
+    @PostMapping(value = "/vote/jpa/{id}")
     public ResponseEntity<Object> vote(@PathVariable int id,
                                        @RequestParam int userId,
                                        @RequestParam int voteNum) {

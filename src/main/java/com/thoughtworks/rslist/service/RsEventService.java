@@ -9,6 +9,7 @@ import com.thoughtworks.rslist.exception.InvalidUserException;
 import com.thoughtworks.rslist.exception.InvalidRsEventException;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,8 @@ public class RsEventService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private VoteRepository voteRepository;
 
     @Transactional
     public RsEventEntity save(RsEvent rsEvent) {
@@ -67,18 +70,18 @@ public class RsEventService {
 
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new InvalidRsEventException("user is not exists"));
 
-        System.out.println(userEntity.getVote());
         if (userEntity.getVote() < voteNum) {
             throw new InvalidRsEventException("user total voteNum < voteNum");
         }
 
-        VoteEntity.builder()
+        VoteEntity voteEntity = VoteEntity.builder()
                 .user(userEntity)
                 .rsEventEntity(RsEventEntity.builder().id(id).build())
                 .voteNum(voteNum)
                 .voteTime(LocalDateTime.now())
                 .build();
 
+        voteRepository.save(voteEntity);
         rsEventRepository.updateVoteNum(voteNum, id);
         userRepository.updateVoteNum(voteNum, userId);
     }

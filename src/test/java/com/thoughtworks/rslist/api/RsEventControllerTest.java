@@ -83,20 +83,20 @@ public class RsEventControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("reEvent is not exists")));
 
-        mockMvc.perform(post("/rs/vote/jpa/1")
+        mockMvc.perform(post("/rs/vote/jpa/3")
                 .param("userId", "-1")
                 .param("voteNum", "2"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("user is not exists")));
 
-        mockMvc.perform(post("/rs/vote/jpa/1")
+        mockMvc.perform(post("/rs/vote/jpa/3")
                 .param("userId", "3")
                 .param("voteNum", "20"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("user total voteNum < voteNum")));
 
-        mockMvc.perform(post("/rs/vote/jpa/1")
-                .param("userId", "3")
+        mockMvc.perform(post("/rs/vote/jpa/3")
+                .param("userId", "4")
                 .param("voteNum", "2"))
                 .andExpect(status().isCreated());
     }
