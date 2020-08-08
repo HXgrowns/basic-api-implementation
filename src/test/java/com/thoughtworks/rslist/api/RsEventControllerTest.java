@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -17,53 +19,53 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class RsJpaControllerTest {
+public class RsEventControllerTest {
     @Autowired
     MockMvc mockMvc;
 
     @Test
     void shouldAddEventSuccess() throws Exception {
-        UserEntity user = new UserEntity();
-        user.setId(2);
-        RsEventEntity rsEvent = new RsEventEntity("first event", "one", user);
+        User user = new User();
+        user.setId(3);
+        RsEvent rsEvent = new RsEvent("third event", "three", user);
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(post("/rs/jpa")
+        mockMvc.perform(post("/rs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rsEventString))
                 .andExpect(status().isCreated());
     }
 
     @Test
-    void shouldAddEventFail() throws Exception {
-        UserEntity user = new UserEntity(new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888"));
-        user.setId(0);
-        RsEventEntity rsEvent = new RsEventEntity("first event", "one", user);
+    public void shouldFindById() throws Exception {
+        mockMvc.perform(get("/rs/3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(3)))
+                .andExpect(jsonPath("$.eventName", is("third event")))
+                .andExpect(jsonPath("$.voteNum", is(0)))
+                .andExpect(jsonPath("$.keyword", is("three")));
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String rsEventString = objectMapper.writeValueAsString(rsEvent);
-
-        mockMvc.perform(post("/rs/jpa")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(rsEventString))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/-1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("rsEvent is not exists")));
     }
 
     @Test
-    void shouldDeleteUserAndRsEvens() throws Exception {
-        mockMvc.perform(delete("/user/2"))
-                .andExpect(status().isOk());
+    public void shouldFindAllByPage() throws Exception {
+        String rsEventList = mockMvc.perform(get("/rs/list")
+                .param("size", "10")
+                .param("page", "0"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        System.out.println(rsEventList);
     }
-
 
     @Test
     void shouldUpdateRsEvent() throws Exception {
-        shouldAddEventSuccess();
-        UserEntity user = new UserEntity(new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888"));
-        user.setId(1);
+        UserEntity user = new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888").build();
+        user.setId(2);
         RsEventEntity rsEvent = new RsEventEntity("new event", "new one", user);
-        rsEvent.setId(1);
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);
 
@@ -97,5 +99,11 @@ class RsJpaControllerTest {
                 .param("userId", "3")
                 .param("voteNum", "2"))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void shouldDeleteRsEvent() throws Exception {
+        mockMvc.perform(delete("/rs/1"))
+                .andExpect(status().isOk());
     }
 }

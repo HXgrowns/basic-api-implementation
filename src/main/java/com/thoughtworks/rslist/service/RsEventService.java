@@ -1,19 +1,22 @@
 package com.thoughtworks.rslist.service;
 
+import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
 import com.thoughtworks.rslist.exception.InvalidUserException;
-import com.thoughtworks.rslist.exception.RsEventException;
+import com.thoughtworks.rslist.exception.InvalidRsEventException;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class RsEventService {
@@ -25,7 +28,8 @@ public class RsEventService {
 
 
     @Transactional
-    public RsEventEntity save(RsEventEntity rsEventEntity) {
+    public RsEventEntity save(RsEvent rsEvent) {
+        RsEventEntity rsEventEntity = rsEvent.build();
         if (rsEventEntity.getUser() == null || rsEventEntity.getUser().getId() == null
                 || !userRepository.findById(rsEventEntity.getUser().getId()).isPresent()) {
             throw new InvalidUserException("user is not exists");
@@ -39,13 +43,15 @@ public class RsEventService {
     }
 
     @Transactional
-    public RsEventEntity update(int index, RsEventEntity inputRsEventEntity) {
-        RsEventEntity findedRsEventEntity = rsEventRepository.findById(index).orElse(null);
-        Integer inputUserId = inputRsEventEntity.getUser().getId();
-        if (findedRsEventEntity == null
-                || inputUserId == null
-                || !inputUserId.equals(findedRsEventEntity.getUser().getId())) {
-            throw new InvalidIndexException("index is not exists");
+    public RsEventEntity update(int id, RsEventEntity inputRsEventEntity) {
+        int userId = Optional.ofNullable(inputRsEventEntity)
+                .map(o -> o.getUser().getId())
+                .orElseThrow(() -> new InvalidRsEventException("user is null"));
+
+        RsEventEntity findedRsEventEntity = rsEventRepository.findById(id).orElseThrow(() -> new InvalidRsEventException("rsEvent is not exists"));
+
+        if (findedRsEventEntity.getUser() == null || findedRsEventEntity.getUser().getId() != userId) {
+            throw new InvalidRsEventException("userId is required");
         }
 
         findedRsEventEntity.setKeyword(inputRsEventEntity.getKeyword() != null ? inputRsEventEntity.getKeyword() : findedRsEventEntity.getKeyword());
@@ -53,29 +59,17 @@ public class RsEventService {
         return rsEventRepository.save(findedRsEventEntity);
     }
 
-    /**
-     * 1.judge rsEvent exists
-     * 2.judge user exists
-     * 3.judge user total voteNum > voteNum
-     * 4.add vote record
-     * 5.update rsEvent
-     * 6.update user voteNum
-     * @param id
-     * @param userId
-     * @param voteNum
-     * @return
-     */
     @Transactional
     public void vote(int id, int userId, int voteNum) {
-        if(!rsEventRepository.existsById(id)) {
-            throw new RsEventException("reEvent is not exists");
+        if (!rsEventRepository.existsById(id)) {
+            throw new InvalidRsEventException("reEvent is not exists");
         }
 
-        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new RsEventException("user is not exists"));
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new InvalidRsEventException("user is not exists"));
 
         System.out.println(userEntity.getVote());
-        if(userEntity.getVote() < voteNum) {
-            throw new RsEventException("user total voteNum < voteNum");
+        if (userEntity.getVote() < voteNum) {
+            throw new InvalidRsEventException("user total voteNum < voteNum");
         }
 
         VoteEntity.builder()
@@ -87,5 +81,20 @@ public class RsEventService {
 
         rsEventRepository.updateVoteNum(voteNum, id);
         userRepository.updateVoteNum(voteNum, userId);
+    }
+
+    public RsEventEntity findById(int id) {
+        return rsEventRepository.findById(id).orElseThrow(() -> new InvalidRsEventException("rsEvent is not exists"));
+    }
+
+    public Page<RsEventEntity> findListByPage(Integer size, Integer page) {
+        return rsEventRepository.findAll(PageRequest.of(page, size));
+    }
+
+    public void deleteById(Integer id) {
+        if (!rsEventRepository.findById(id).isPresent()) {
+            throw new InvalidIndexException("rsEvent is not exists");
+        }
+        rsEventRepository.deleteById(id);
     }
 }

@@ -1,10 +1,9 @@
 package com.thoughtworks.rslist.entity;
 
-import com.thoughtworks.rslist.domain.RsEvent;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "rs_event")
@@ -25,17 +24,9 @@ public class RsEventEntity {
     @ManyToOne(targetEntity = UserEntity.class, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
-
-    public RsEventEntity(String eventName, String keyword) {
-        this.eventName = eventName;
-        this.keyword = keyword;
-    }
-
-    public RsEventEntity(RsEvent rsEvent) {
-        this.id = rsEvent.getId();
-        this.eventName = rsEvent.getEventName();
-        this.keyword = rsEvent.getKeyword();
-        this.user = new UserEntity(rsEvent.getUser());
+    @JsonIgnore
+    public UserEntity getUser() {
+        return user;
     }
 
     public RsEventEntity(String eventName, String keyword, UserEntity user) {

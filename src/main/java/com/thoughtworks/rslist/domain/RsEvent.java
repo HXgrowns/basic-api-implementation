@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import lombok.Data;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -20,10 +19,10 @@ public class RsEvent {
     }
 
     @JsonView(PublicView.class)
-    @NotBlank(message = "eventName is null")
+    @NotNull(message = "eventName is null")
     private String eventName;
 
-    @NotBlank(message = "keyword is null")
+    @NotNull(message = "keyword is null")
     @JsonView(PublicView.class)
     private String keyword;
 
@@ -54,6 +53,7 @@ public class RsEvent {
 
     public RsEventEntity build() {
         return RsEventEntity.builder()
+                .id(id)
                 .user(this.user.build())
                 .eventName(this.eventName)
                 .voteNum(0)

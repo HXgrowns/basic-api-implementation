@@ -12,6 +12,8 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @JsonView(RsEvent.PrivateView.class)
 public class User {
+    private int id;
+
     @Size(max = 8)
     @NotBlank(message = "user name is null")
     @JsonProperty("userName")
@@ -35,7 +37,7 @@ public class User {
     @JsonProperty("phone")
     private String phone;
 
-    private int voteCount;
+    private Integer voteCount;
 
     public User(@Size(max = 8) @NotNull String userName,
                 @Min(18) @Max(100) @NotNull Integer age,
@@ -51,6 +53,7 @@ public class User {
 
     public UserEntity build() {
         return UserEntity.builder()
+                .id(this.id)
                 .age(this.age)
                 .email(this.email)
                 .name(this.userName)

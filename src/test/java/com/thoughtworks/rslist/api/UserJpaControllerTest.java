@@ -9,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,9 +33,30 @@ public class UserJpaControllerTest {
     }
 
     @Test
+    void shouldAddUserFail() throws Exception {
+        User user = new User("huxiao", -1, "female", "hu@thoughtworks.com", "18888818888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userString = objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userString))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("age < 18")));
+    }
+
+
+    @Test
+    void shouldFineUserById() throws Exception {
+        mockMvc.perform(get("/user/3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("hu")));
+    }
+
+    @Test
     void shouldDeleteUserById() throws Exception {
         mockMvc.perform(delete("/user/1"))
                 .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error", is("user id is not exists")));
     }
+
 }
