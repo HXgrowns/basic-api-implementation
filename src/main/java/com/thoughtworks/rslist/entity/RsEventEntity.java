@@ -1,10 +1,7 @@
 package com.thoughtworks.rslist.entity;
 
 import com.thoughtworks.rslist.domain.RsEvent;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -22,7 +19,8 @@ public class RsEventEntity {
 
     private String eventName;
     private String keyword;
-    //private Integer userId;
+    @Column(name = "vote_num", columnDefinition = "tinyint default 0")
+    private Integer voteNum;
 
     @ManyToOne(targetEntity = UserEntity.class, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "user_id", referencedColumnName = "id")

@@ -10,8 +10,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -22,10 +23,8 @@ class RsJpaControllerTest {
 
     @Test
     void shouldAddEventSuccess() throws Exception {
-        shouldAddUser();
-
-        UserEntity user = new UserEntity(new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888"));
-        user.setId(1);
+        UserEntity user = new UserEntity();
+        user.setId(2);
         RsEventEntity rsEvent = new RsEventEntity("first event", "one", user);
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);
@@ -57,18 +56,6 @@ class RsJpaControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    void shouldAddUser() throws Exception {
-        User user = new User("hu", 18, "female", "hu@thoughtworks.com", "18888818888");
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String userString = objectMapper.writeValueAsString(user);
-
-        mockMvc.perform(post("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userString))
-                .andExpect(status().isOk());
-    }
 
     @Test
     void shouldUpdateRsEvent() throws Exception {
@@ -83,6 +70,32 @@ class RsJpaControllerTest {
         mockMvc.perform(patch("/rs/jpa/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rsEventString))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void shouldVoteRsEvent() throws Exception {
+        mockMvc.perform(post("/rs/vote/jpa/-1")
+                .param("userId", "3")
+                .param("voteNum", "2"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("reEvent is not exists")));
+
+        mockMvc.perform(post("/rs/vote/jpa/1")
+                .param("userId", "-1")
+                .param("voteNum", "2"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("user is not exists")));
+
+        mockMvc.perform(post("/rs/vote/jpa/1")
+                .param("userId", "3")
+                .param("voteNum", "20"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("user total voteNum < voteNum")));
+
+        mockMvc.perform(post("/rs/vote/jpa/1")
+                .param("userId", "3")
+                .param("voteNum", "2"))
                 .andExpect(status().isCreated());
     }
 }

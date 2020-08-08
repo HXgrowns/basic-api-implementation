@@ -25,15 +25,6 @@ public class UserEntity {
     private String gender;
     private String email;
     private String phone;
+    @Column(name = "vote_num", columnDefinition = "tinyint default 10")
     private int vote;
-
-    public UserEntity(User user) {
-        this.id = user.getId();
-        this.name = user.getUserName();
-        this.age = user.getAge();
-        this.gender = user.getGender();
-        this.email = user.getEmail();
-        this.phone = user.getPhone();
-        this.vote = user.getVoteCount();
-    }
 }

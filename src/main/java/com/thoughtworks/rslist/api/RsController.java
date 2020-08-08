@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.entity.RsEventEntity;
+import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
 import com.thoughtworks.rslist.exception.InvalidParamException;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -142,6 +144,14 @@ public class RsController {
     public ResponseEntity<Object> update(@PathVariable int index, @RequestBody RsEventEntity inputRsEventEntity) {
         RsEventEntity rs = rsEventService.update(index, inputRsEventEntity);
         return ResponseEntity.status(HttpStatus.CREATED).header("index", rs.getId() + "").build();
+    }
+
+    @PostMapping(value = "/vote/jpa/{index}")
+    public ResponseEntity<Object> vote(@PathVariable int index,
+                                       @RequestParam int userId,
+                                       @RequestParam int voteNum) {
+        rsEventService.vote(index, userId, voteNum);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ExceptionHandler(RuntimeException.class)

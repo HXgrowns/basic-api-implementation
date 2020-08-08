@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.thoughtworks.rslist.entity.RsEventEntity;
 import lombok.Data;
 
 import javax.validation.Valid;
@@ -49,5 +50,14 @@ public class RsEvent {
                 "\"name\": \"%s\",\n" +
                 "\"keyword\": \"%s\"\n" +
                 "}", this.eventName, this.keyword);
+    }
+
+    public RsEventEntity build() {
+        return RsEventEntity.builder()
+                .user(this.user.build())
+                .eventName(this.eventName)
+                .voteNum(0)
+                .keyword(this.keyword)
+                .build();
     }
 }

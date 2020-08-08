@@ -34,9 +34,6 @@ public class UserController {
     }
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
     UserService userService;
 
     @Autowired
@@ -50,19 +47,26 @@ public class UserController {
             throw new InvalidUserException(msg);
         }
 
-        UserEntity userEntity = new UserEntity(user);
-        userRepository.save(userEntity);
+        userService.addUser(user);
         return ResponseEntity.status(HttpStatus.OK).header("index", "ok").build();
     }
 
-    @GetMapping("/{index}")
-    public ResponseEntity<UserEntity> getUserByUserId(@PathVariable Integer index) {
-        return ResponseEntity.ok(userRepository.findById(index).orElse(null));
+    @GetMapping("/{id}")
+    public ResponseEntity<UserEntity> getById(@PathVariable int id) {
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @GetMapping
     public ResponseEntity<List<User>> getUserList() {
         return ResponseEntity.ok(userList);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUserById(@PathVariable Integer id) {
+        rsEventService.deleteByUserId(id);
+        userService.deleteById(id);
+
+        return ResponseEntity.ok().build();
     }
 
     @ExceptionHandler(RuntimeException.class)
@@ -71,14 +75,5 @@ public class UserController {
         commonError.setError(e.getMessage());
 
         return ResponseEntity.badRequest().body(commonError);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteUserById(@PathVariable Integer id) {
-
-        rsEventService.deleteByUserId(id);
-
-        userRepository.findById(id).ifPresent(o -> userService.deleteById(id));
-        return ResponseEntity.ok().build();
     }
 }
