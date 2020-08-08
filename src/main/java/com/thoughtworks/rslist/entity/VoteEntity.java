@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,4 +30,14 @@ public class VoteEntity {
     @ManyToOne(targetEntity = RsEventEntity.class, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "rs_event_id", referencedColumnName = "id")
     private RsEventEntity rsEventEntity;
+
+    @JsonIgnore
+    public UserEntity getUser() {
+        return user;
+    }
+
+    @JsonIgnore
+    public RsEventEntity getRsEventEntity() {
+        return rsEventEntity;
+    }
 }
