@@ -11,14 +11,16 @@ import java.util.List;
 
 @Configuration
 public class VoteService {
+    private final VoteRepository voteRepository;
 
-    @Bean
-    public VoteService VoteService() {
-        return new VoteService();
+    public VoteService(VoteRepository voteRepository) {
+        this.voteRepository = voteRepository;
     }
 
-    @Autowired
-    VoteRepository voteRepository;
+    @Bean
+    public VoteService VoteService(VoteRepository voteRepository) {
+        return new VoteService(voteRepository);
+    }
 
     public VoteEntity findById(int id) {
 

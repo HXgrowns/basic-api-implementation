@@ -24,17 +24,22 @@ import java.util.Optional;
 @Configuration
 public class RsEventService {
 
-    @Bean
-    public RsEventService RsEventService() {
-        return new RsEventService();
+    private final RsEventRepository rsEventRepository;
+    private final UserRepository userRepository;
+    private final VoteRepository voteRepository;
+
+    public RsEventService(RsEventRepository rsEventRepository, UserRepository userRepository, VoteRepository voteRepository) {
+        this.rsEventRepository = rsEventRepository;
+        this.userRepository = userRepository;
+        this.voteRepository = voteRepository;
     }
 
-    @Autowired
-    RsEventRepository rsEventRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    VoteRepository voteRepository;
+    @Bean
+    public RsEventService RsEventService(RsEventRepository rsEventRepository,
+                                         UserRepository userRepository,
+                                         VoteRepository voteRepository) {
+        return new RsEventService(rsEventRepository, userRepository, voteRepository);
+    }
 
     @Transactional
     public RsEventEntity save(RsEvent rsEvent) {

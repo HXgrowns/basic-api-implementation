@@ -13,13 +13,16 @@ import java.util.Optional;
 
 @Configuration
 public class UserService {
-    @Bean
-    public UserService UserService() {
-        return new UserService();
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    @Autowired
-    private UserRepository userRepository;
+    @Bean
+    public UserService UserService(UserRepository userRepository) {
+        return new UserService(userRepository);
+    }
 
     @Transactional
     public void deleteById(int id) {
