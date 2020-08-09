@@ -26,7 +26,7 @@ public class RsEventControllerTest {
     @Test
     void shouldAddEventSuccess() throws Exception {
         User user = new User();
-        user.setId(3);
+        user.setId(4);
         RsEvent rsEvent = new RsEvent("third event", "three", user);
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);

@@ -11,6 +11,8 @@ import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,16 +21,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Service
+@Configuration
 public class RsEventService {
-    @Autowired
-    private RsEventRepository rsEventRepository;
+
+    @Bean
+    public RsEventService RsEventService() {
+        return new RsEventService();
+    }
 
     @Autowired
-    private UserRepository userRepository;
-
+    RsEventRepository rsEventRepository;
     @Autowired
-    private VoteRepository voteRepository;
+    UserRepository userRepository;
+    @Autowired
+    VoteRepository voteRepository;
 
     @Transactional
     public RsEventEntity save(RsEvent rsEvent) {
