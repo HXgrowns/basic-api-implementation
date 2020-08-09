@@ -6,7 +6,6 @@ import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidUserException;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,11 +17,14 @@ import javax.validation.Valid;
 @RequestMapping("/user")
 @ControllerAdvice
 public class UserController {
-    @Autowired
-    UserService userService;
 
-    @Autowired
-    RsEventService rsEventService;
+    private final UserService userService;
+    private final RsEventService rsEventService;
+
+    public UserController(UserService userService, RsEventService rsEventService) {
+        this.userService = userService;
+        this.rsEventService = rsEventService;
+    }
 
     @PostMapping
     public ResponseEntity addUser(@RequestBody(required = false) @Valid User user, BindingResult bindingResult) {

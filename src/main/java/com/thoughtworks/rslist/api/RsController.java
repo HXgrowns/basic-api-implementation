@@ -5,7 +5,6 @@ import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
 import com.thoughtworks.rslist.service.RsEventService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @ControllerAdvice
 public class RsController {
 
-    @Autowired
-    private RsEventService rsEventService;
+    private final RsEventService rsEventService;
+
+    public RsController(RsEventService rsEventService) {
+        this.rsEventService = rsEventService;
+    }
 
     @PostMapping
     public ResponseEntity add(@RequestBody RsEvent rsEvent) {

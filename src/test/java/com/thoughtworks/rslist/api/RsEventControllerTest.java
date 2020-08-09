@@ -43,7 +43,7 @@ public class RsEventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(3)))
                 .andExpect(jsonPath("$.eventName", is("third event")))
-                .andExpect(jsonPath("$.voteNum", is(0)))
+                .andExpect(jsonPath("$.voteNum", is(12)))
                 .andExpect(jsonPath("$.keyword", is("three")));
 
         mockMvc.perform(get("/rs/-1"))
