@@ -20,7 +20,7 @@ public class VoteControllerTest {
 
     @Test
     void shouldFindByVoteTime() throws Exception {
-        mockMvc.perform(get("/vote/listByVoteTime")
+        mockMvc.perform(get("/votes")
         .param("startTime", "2020-08-08 23:37:35")
         .param("endTime", "2020-08-08 23:40:01"))
                 .andExpect(status().isOk())

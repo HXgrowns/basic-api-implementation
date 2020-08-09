@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/vote")
+@RequestMapping
 public class VoteController {
     private final VoteService voteService;
 
@@ -21,12 +21,7 @@ public class VoteController {
         this.voteService = voteService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<VoteEntity> findById(@PathVariable int id) {
-        return ResponseEntity.ok(voteService.findById(id));
-    }
-
-    @GetMapping("/listByVoteTime")
+    @GetMapping("/votes")
     public ResponseEntity<List<VoteEntity>> findByVoteTime(@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startTime, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endTime) {
         return ResponseEntity.ok(voteService.findByVoteTime(startTime, endTime));
     }

@@ -10,13 +10,12 @@ import com.thoughtworks.rslist.exception.InvalidRsEventException;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.repository.VoteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.thoughtworks.rslist.response.RsEventResponse;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -59,8 +58,8 @@ public class RsEventService {
     @Transactional
     public RsEventEntity update(int id, RsEventEntity inputRsEventEntity) {
         int userId = Optional.ofNullable(inputRsEventEntity)
-                .map(o -> o.getUser().getId())
-                .orElseThrow(() -> new InvalidRsEventException("user is null"));
+                .map(RsEventEntity::getUser).orElseThrow(() -> new InvalidRsEventException("user is null"))
+                .getId();
 
         RsEventEntity findedRsEventEntity = rsEventRepository.findById(id).orElseThrow(() -> new InvalidRsEventException("rsEvent is not exists"));
 
@@ -97,12 +96,12 @@ public class RsEventService {
         userRepository.updateVoteNum(voteNum, userId);
     }
 
-    public RsEventEntity findById(int id) {
-        return rsEventRepository.findById(id).orElseThrow(() -> new InvalidRsEventException("rsEvent is not exists"));
+    public RsEventResponse findById(int id) {
+        return rsEventRepository.findById(id).orElseThrow(() -> new InvalidRsEventException("rsEvent is not exists")).build();
     }
 
-    public Page<RsEventEntity> findListByPage(Integer size, Integer page) {
-        return rsEventRepository.findAll(PageRequest.of(page, size));
+    public Page<RsEventResponse> findListByPage(Integer size, Integer page) {
+        return rsEventRepository.findAll(PageRequest.of(page, size)).map(RsEventEntity::build);
     }
 
     public void deleteById(Integer id) {

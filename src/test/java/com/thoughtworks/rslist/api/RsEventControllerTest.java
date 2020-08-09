@@ -43,7 +43,7 @@ public class RsEventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(3)))
                 .andExpect(jsonPath("$.eventName", is("third event")))
-                .andExpect(jsonPath("$.voteNum", is(12)))
+                .andExpect(jsonPath("$.voteNum", is(14)))
                 .andExpect(jsonPath("$.keyword", is("three")));
 
         mockMvc.perform(get("/rs/-1"))
@@ -53,7 +53,7 @@ public class RsEventControllerTest {
 
     @Test
     public void shouldFindAllByPage() throws Exception {
-        String rsEventList = mockMvc.perform(get("/rs/list")
+        String rsEventList = mockMvc.perform(get("/rsEvents")
                 .param("size", "10")
                 .param("page", "0"))
                 .andExpect(status().isOk())
@@ -64,12 +64,12 @@ public class RsEventControllerTest {
     @Test
     void shouldUpdateRsEvent() throws Exception {
         UserEntity user = new User("huxiao", 18, "female", "hu@thoughtworks.com", "18888818888").build();
-        user.setId(2);
+        user.setId(3);
         RsEventEntity rsEvent = new RsEventEntity("new event", "new one", user);
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(patch("/rs/jpa/1")
+        mockMvc.perform(patch("/rs/5")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rsEventString))
                 .andExpect(status().isCreated());
@@ -77,25 +77,25 @@ public class RsEventControllerTest {
 
     @Test
     void shouldVoteRsEvent() throws Exception {
-        mockMvc.perform(post("/rs/vote/jpa/-1")
+        mockMvc.perform(post("/rs/vote/-1")
                 .param("userId", "3")
                 .param("voteNum", "2"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("reEvent is not exists")));
 
-        mockMvc.perform(post("/rs/vote/jpa/3")
+        mockMvc.perform(post("/rs/vote/3")
                 .param("userId", "-1")
                 .param("voteNum", "2"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("user is not exists")));
 
-        mockMvc.perform(post("/rs/vote/jpa/3")
+        mockMvc.perform(post("/rs/vote/3")
                 .param("userId", "3")
                 .param("voteNum", "20"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("user total voteNum < voteNum")));
 
-        mockMvc.perform(post("/rs/vote/jpa/3")
+        mockMvc.perform(post("/rs/vote/6")
                 .param("userId", "4")
                 .param("voteNum", "2"))
                 .andExpect(status().isCreated());
@@ -103,7 +103,7 @@ public class RsEventControllerTest {
 
     @Test
     void shouldDeleteRsEvent() throws Exception {
-        mockMvc.perform(delete("/rs/1"))
+        mockMvc.perform(delete("/rs/10"))
                 .andExpect(status().isOk());
     }
 }

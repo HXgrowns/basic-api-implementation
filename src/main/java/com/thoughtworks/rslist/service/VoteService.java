@@ -22,11 +22,6 @@ public class VoteService {
         return new VoteService(voteRepository);
     }
 
-    public VoteEntity findById(int id) {
-
-        return null;
-    }
-
     public List<VoteEntity> findByVoteTime(LocalDateTime startTime, LocalDateTime endTime) {
         return voteRepository.findByVoteTimeBetween(startTime, endTime);
     }
