@@ -11,17 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Configuration
 public class UserService {
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    @Bean
-    public UserService UserService(UserRepository userRepository) {
-        return new UserService(userRepository);
     }
 
     @Transactional
@@ -33,7 +27,7 @@ public class UserService {
     }
 
     public void addUser(User user) {
-        userRepository.save(Optional.ofNullable(user).orElseThrow(() -> new InvalidUserException("user is null")).build());
+        userRepository.save(Optional.ofNullable(user.build()).orElseThrow(() -> new InvalidUserException("user is null")));
     }
 
     public UserEntity findById(int id) {

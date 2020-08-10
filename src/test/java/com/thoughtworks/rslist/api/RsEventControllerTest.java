@@ -26,7 +26,7 @@ public class RsEventControllerTest {
     @Test
     void shouldAddEventSuccess() throws Exception {
         User user = new User();
-        user.setId(4);
+        user.setId(1);
         RsEvent rsEvent = new RsEvent("third event", "three", user);
         ObjectMapper objectMapper = new ObjectMapper();
         String rsEventString = objectMapper.writeValueAsString(rsEvent);
@@ -95,8 +95,8 @@ public class RsEventControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("user total voteNum < voteNum")));
 
-        mockMvc.perform(post("/rs/vote/6")
-                .param("userId", "4")
+        mockMvc.perform(post("/rs/vote/2")
+                .param("userId", "2")
                 .param("voteNum", "2"))
                 .andExpect(status().isCreated());
     }

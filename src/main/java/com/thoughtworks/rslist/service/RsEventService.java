@@ -20,7 +20,6 @@ import com.thoughtworks.rslist.response.RsEventResponse;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Configuration
 public class RsEventService {
 
     private final RsEventRepository rsEventRepository;
@@ -31,13 +30,6 @@ public class RsEventService {
         this.rsEventRepository = rsEventRepository;
         this.userRepository = userRepository;
         this.voteRepository = voteRepository;
-    }
-
-    @Bean
-    public RsEventService RsEventService(RsEventRepository rsEventRepository,
-                                         UserRepository userRepository,
-                                         VoteRepository voteRepository) {
-        return new RsEventService(rsEventRepository, userRepository, voteRepository);
     }
 
     @Transactional

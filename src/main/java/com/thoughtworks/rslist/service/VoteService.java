@@ -9,17 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Configuration
 public class VoteService {
     private final VoteRepository voteRepository;
 
     public VoteService(VoteRepository voteRepository) {
         this.voteRepository = voteRepository;
-    }
-
-    @Bean
-    public VoteService VoteService(VoteRepository voteRepository) {
-        return new VoteService(voteRepository);
     }
 
     public List<VoteEntity> findByVoteTime(LocalDateTime startTime, LocalDateTime endTime) {
